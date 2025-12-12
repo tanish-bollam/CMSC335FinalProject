@@ -1,39 +1,45 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
-const path = require('path');
+const app = express();
 require('dotenv').config();
 
-const app = express();
+(async () => {
+    try {
+        // Connect to MongoDB
+        await mongoose.connect(process.env.MONGO_CONNECTION_STRING);
+        console.log("Connected to MongoDB Atlas");
 
-// 1. Database Connection
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("Connected to MongoDB Atlas"))
-    .catch(err => console.error("Database connection error:", err));
+        // required middleware so it works later
+        app.set('view engine', 'ejs');
+        app.set('views', __dirname);
+        app.use(express.urlencoded({ extended: true }));
+        app.use(express.static(__dirname));
 
-// 2. Middleware
-app.set('view engine', 'ejs');
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+        // session setup
+        app.use(session({
+            secret: process.env.SESSION_SECRET || 'defaultSecret',
+            resave: false,
+            saveUninitialized: false
+        }));
 
-// 3. Session Config (For Login)
-app.use(session({
-    secret: process.env.SESSION_SECRET || 'defaultSecret',
-    resave: false,
-    saveUninitialized: false
-}));
+        // routing from other files
+        const authRoutes = require('./auth');
+        const apiRoutes = require('./api');
+        const portfolioRoutes = require('./portfolio');
 
-// 4. Routes
-const authRoutes = require('./auth');
-const apiRoutes = require('./api');
-const portfolioRoutes = require('./portfolio');
+        app.use('/', authRoutes);
+        app.use('/', apiRoutes);
+        app.use('/portfolio', portfolioRoutes);
 
-app.use('/', authRoutes);
-app.use('/', apiRoutes);
-app.use('/portfolio', portfolioRoutes);
-
-// 5. Start Server
-const PORT = 4000;
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-});
+        // start the server and listen on port 4000
+        const PORT = 4000;
+        app.listen(PORT, () => {
+            console.log(`Server running at http://localhost:${PORT}`);
+        });
+    } catch (err) {
+        // handle connection errors
+        console.error("Database connection error:", err);
+        process.exit(1);
+    }
+})();

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// define the schema for portfolio items
 const portfolioSchema = new mongoose.Schema({
     coinId: {
         type: String,
@@ -20,6 +21,6 @@ const portfolioSchema = new mongoose.Schema({
     }
 });
 
-
+// create and export the model
 const PortfolioItem = mongoose.model('PortfolioItem', portfolioSchema);
 module.exports = PortfolioItem;
