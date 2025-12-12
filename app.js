@@ -13,8 +13,8 @@ mongoose.connect(process.env.MONGO_URI)
 
 // 2. Middleware
 app.set('view engine', 'ejs');
-app.use(express.urlencoded({ extended: true })); // Parse form data
-app.use(express.static(path.join(__dirname, 'public'))); // Serve CSS
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // 3. Session Config (For Login)
 app.use(session({
@@ -24,13 +24,13 @@ app.use(session({
 }));
 
 // 4. Routes
-const authRoutes = require('./routes/auth');
-const apiRoutes = require('./routes/api');
-const portfolioRoutes = require('./routes/portfolio');
+const authRoutes = require('auth');
+const apiRoutes = require('api');
+const portfolioRoutes = require('portfolio');
 
-app.use('/', authRoutes);      // Login/Register
-app.use('/', apiRoutes);       // Dashboard (Home)
-app.use('/portfolio', portfolioRoutes); // Add/Delete Coins
+app.use('/', authRoutes);
+app.use('/', apiRoutes);
+app.use('/portfolio', portfolioRoutes);
 
 // 5. Start Server
 const PORT = 4000;

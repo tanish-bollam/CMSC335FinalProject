@@ -1,6 +1,7 @@
 # CryptoPortfolio Tracker
 
 Submitted by: Tanish Bollam (tbollam)
+
 Group Members: Tanish Bollam (tbollam)
 
 App Description: A Node.js dashboard that allows users to create accounts, track their cryptocurrency holdings, and view real-time values using the CoinGecko API.
