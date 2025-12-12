@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
+const User = require('./User');
 
 // GET: Login Page
 router.get('/login', (req, res) => {
@@ -11,7 +11,7 @@ router.get('/login', (req, res) => {
 router.post('/register', async (req, res) => {
     try {
         const { username, password } = req.body;
-        
+
         // Check if user exists
         const existingUser = await User.findOne({ username });
         if (existingUser) {

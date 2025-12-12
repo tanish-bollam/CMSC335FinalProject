@@ -24,9 +24,9 @@ app.use(session({
 }));
 
 // 4. Routes
-const authRoutes = require('auth');
-const apiRoutes = require('api');
-const portfolioRoutes = require('portfolio');
+const authRoutes = require('./auth');
+const apiRoutes = require('./api');
+const portfolioRoutes = require('./portfolio');
 
 app.use('/', authRoutes);
 app.use('/', apiRoutes);

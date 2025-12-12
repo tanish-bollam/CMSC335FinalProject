@@ -1,33 +1,35 @@
 const express = require('express');
 const router = express.Router();
-const axios = require('axios');
-const PortfolioItem = require('../models/PortfolioItem');
+const PortfolioItem = require('./portfolioIten');
 
 router.get('/', async (req, res) => {
-    // 1. Guard: If not logged in, redirect to login
+    // 1. Guard: Login check
     if (!req.session.userId) {
         return res.redirect('/login');
     }
 
     try {
-        // 2. Fetch DB Items for THIS user only
+        // 2. Fetch DB Items
         const portfolio = await PortfolioItem.find({ owner: req.session.userId });
 
-        // 3. Fetch Prices from CoinGecko API
+        // 3. Fetch Prices using NATIVE FETCH
         let prices = {};
         if (portfolio.length > 0) {
-            // Get unique IDs (e.g., "bitcoin,ethereum")
             const coinIds = [...new Set(portfolio.map(p => p.coinId))].join(',');
-
-            // Get API Key from .env
             const apiKey = process.env.COINGECKO_API_KEY;
 
-            // UPDATED AXIOS CALL:
-            // We verify if an API key exists to append it to the URL
             const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coinIds}&vs_currencies=usd&x_cg_demo_api_key=${apiKey}`;
 
-            const response = await axios.get(url);
-            prices = response.data;
+            // --- START CHANGE ---
+            const response = await fetch(url);
+
+            // Check if the request was successful
+            if (!response.ok) {
+                throw new Error(`API call failed with status: ${response.status}`);
+            }
+
+            prices = await response.json();
+            // --- END CHANGE ---
         }
 
         // 4. Render
@@ -35,7 +37,6 @@ router.get('/', async (req, res) => {
 
     } catch (err) {
         console.error("API Error:", err.message);
-        // Render with empty data if API fails so the app doesn't crash
         res.render('index', { portfolio: [], prices: {}, error: "Error fetching market data." });
     }
 });

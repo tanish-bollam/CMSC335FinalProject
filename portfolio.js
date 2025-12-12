@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const PortfolioItem = require('../models/PortfolioItem');
+const PortfolioItem = require('./portfolioIten');
 
 // Helper function to check login status
 const requireLogin = (req, res, next) => {
