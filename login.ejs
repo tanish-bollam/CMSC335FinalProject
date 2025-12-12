@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login - CryptoTracker</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="container" style="max-width: 400px; margin-top: 50px">
+      <h1>Crypto Tracker</h1>
+
+      <% if (typeof error !== 'undefined') { %>
+      <div class="error-msg"><%= error %></div>
+      <% } %>
+
+      <div class="card">
+        <h3>Login</h3>
+        <form
+          action="/login"
+          method="POST"
+          style="display: flex; flex-direction: column; gap: 10px"
+        >
+          <input type="text" name="username" placeholder="Username" required />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+          />
+          <button type="submit">Access Dashboard</button>
+        </form>
+      </div>
+
+      <p style="text-align: center">-- OR --</p>
+
+      <div class="card">
+        <h3>Create Account</h3>
+        <form
+          action="/register"
+          method="POST"
+          style="display: flex; flex-direction: column; gap: 10px"
+        >
+          <input
+            type="text"
+            name="username"
+            placeholder="New Username"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="New Password"
+            required
+          />
+          <button type="submit" style="background-color: #00bcd4">
+            Sign Up
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
